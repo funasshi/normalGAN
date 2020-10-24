@@ -9,15 +9,15 @@ import matplotlib.pyplot as plt
 # データセットの定義 (訓練データの正規化、ラベルのone-hot-vec化)
 
 transform = transforms.Compose([transforms.ToTensor(),
-                                lambda x: torch.flatten(x),
+                                lambda x: x.reshape((28*28)),
                                 lambda x: (x - 0.5) * 2])
 
 target_transform = lambda x: torch.eye(10)[x]
 
 trainset = torchvision.datasets.MNIST(root='datasets', train=True, download=True,
                                       transform=transform, target_transform=target_transform)
-
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=32, shuffle=True)
+batch_size = 32
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True)
 
 # ----------------------------------------------------------------------------------------------
 # モデル定義
@@ -41,7 +41,7 @@ optimizer_g = optim.Adam(generator.parameters(), lr=0.0002)
 
 # 訓練アルゴリズム
 def train_discriminator(generator, discriminator, data):
-    z=torch.rand((data.shape[0], 100))
+    z=torch.rand((batch_size, 100))
     if torch.cuda.is_available():
         z=z.cuda()
         data=data.cuda()
@@ -66,7 +66,7 @@ def train_discriminator(generator, discriminator, data):
 
 
 def train_generator(generator, discriminator):
-    z=torch.rand((100, 100))
+    z=torch.rand((batch_size, 100))
     if torch.cuda.is_available():
         z = z.cuda()
     fake = generator(z)
