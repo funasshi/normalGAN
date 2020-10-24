@@ -24,10 +24,11 @@ trainloader = torch.utils.data.DataLoader(trainset, batch_size=32, shuffle=True)
 generator = Generator()
 discriminator = Discriminator()
 if torch.cuda.is_available():
-    discriminator.cuda()
+    discriminator = discriminator.cuda()
     discriminator = nn.DataParallel(discriminator)
-    generator.cuda()
+    generator = generator.cuda()
     generator = nn.DataParallel(generator)
+    torch.backends.cudnn.benchmark = True
 
 # ロス定義
 loss_cross = nn.BCELoss()
@@ -101,7 +102,7 @@ def train(generator, discriminator, epochs):
 
 # ----------------------------------------------------------------------------------------------
 # 実際の処理
-epochs=int(input())
+epochs=int(input("epochs:"))
 loss_d_list,loss_g_list=train(generator, discriminator, epochs)
 
 # ----------------------------------------------------------------------------------------------
