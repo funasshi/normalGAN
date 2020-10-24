@@ -25,9 +25,9 @@ generator = Generator()
 discriminator = Discriminator()
 if torch.cuda.is_available():
     discriminator = discriminator.cuda()
-    discriminator = nn.DataParallel(discriminator)
+    # discriminator = nn.DataParallel(discriminator)
     generator = generator.cuda()
-    generator = nn.DataParallel(generator)
+    # generator = nn.DataParallel(generator)
     torch.backends.cudnn.benchmark = True
 
 # ロス定義
