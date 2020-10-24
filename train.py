@@ -107,7 +107,8 @@ loss_d_list,loss_g_list=train(generator, discriminator, epochs)
 
 # ----------------------------------------------------------------------------------------------
 # 可視化
-x=list(range(epochs))
+import numpy as np
+x=np.arange(epochs)
 plt.plot(x,loss_d_list,"r",label="d_loss")
 plt.plot(x,loss_g_list,"g",label="g_loss")
 plt.savefig("loss.png")

@@ -12,5 +12,5 @@ fake=generator(torch.rand((1,100)))
 fake=fake.reshape(28,28)
 fake=fake.detach().numpy()
 
-plt.imshow(fake,cmap="gray")
+plt.imshow((fake+1)/2,cmap="gray")
 plt.show()
