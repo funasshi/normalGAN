@@ -34,8 +34,8 @@ if torch.cuda.is_available():
 loss_cross = nn.BCELoss()
 
 # 最適化アルゴリズム定義
-optimizer_d = optim.Adam(discriminator.parameters(), lr=0.0001)
-optimizer_g = optim.Adam(generator.parameters(), lr=0.0002)
+optimizer_d = optim.Adam(discriminator.parameters(), lr=0.0001,betas=(0.5, 0.999))
+optimizer_g = optim.Adam(generator.parameters(), lr=0.0002,betas=(0.5, 0.999))
 epochs=int(input("epochs:"))
 
 
@@ -62,7 +62,7 @@ def train_discriminator(generator, discriminator, data):
 
     loss_A = loss_cross(prob_fake, torch.zeros_like(prob_fake))
     loss_B = loss_cross(prob_data, torch.ones_like(prob_data))
-    loss_d = loss_A + loss_B
+    loss_d = (loss_A + loss_B) / 2
 
     optimizer_d.zero_grad()
     optimizer_g.zero_grad()
