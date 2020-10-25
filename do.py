@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 generator = Generator()
 model_path = 'trained_generator.pth'
 generator.load_state_dict(torch.load(model_path,map_location=torch.device('cpu')))
-
+generator.eval()
 fake=generator(torch.rand((1,100)))
 fake=fake.reshape(28,28)
 fake=fake.detach().numpy()

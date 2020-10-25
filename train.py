@@ -36,6 +36,17 @@ loss_cross = nn.BCELoss()
 # 最適化アルゴリズム定義
 optimizer_d = optim.Adam(discriminator.parameters(), lr=0.0001)
 optimizer_g = optim.Adam(generator.parameters(), lr=0.0002)
+epochs=int(input("epochs:"))
+
+
+def schedule_func(epoch):
+    middle=epochs//2
+    if epoch<middle:
+        return 1
+    return (epochs-epoch)/middle
+
+scheduler_d = optim.lr_scheduler.LambdaLR(optimizer_d, lr_lambda = schedule_func)
+scheduler_g = optim.lr_scheduler.LambdaLR(optimizer_g, lr_lambda = schedule_func)
 
 # ----------------------------------------------------------------------------------------------
 
@@ -61,6 +72,7 @@ def train_discriminator(generator, discriminator, data):
     optimizer_g.zero_grad()
     optimizer_d.step()
     optimizer_g.step()
+    scheduler_d.step()
 
     return loss_d.item()
 
@@ -82,6 +94,9 @@ def train_generator(generator, discriminator):
     optimizer_d.zero_grad()
     optimizer_d.step()
     optimizer_g.step()
+
+    scheduler_g.step()
+
     return loss_g.item()
 
 def train(generator, discriminator, epochs):
@@ -102,7 +117,6 @@ def train(generator, discriminator, epochs):
 
 # ----------------------------------------------------------------------------------------------
 # 実際の処理
-epochs=int(input("epochs:"))
 loss_d_list,loss_g_list=train(generator, discriminator, epochs)
 
 # ----------------------------------------------------------------------------------------------
