@@ -25,9 +25,9 @@ generator = Generator()
 discriminator = Discriminator()
 
 # 重みの初期化
-def init_weights(m):
-    if type(m) == nn.Linear:
-        nn.init.normal_(m.weight,0,0.01)
+# def init_weights(m):
+#     if type(m) == nn.Linear:
+#         nn.init.normal_(m.weight,0,0.01)
 
 generator.apply(init_weights)
 discriminator.apply(init_weights)
