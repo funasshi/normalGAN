@@ -72,7 +72,6 @@ def train_discriminator(generator, discriminator, data):
     optimizer_g.zero_grad()
     optimizer_d.step()
     optimizer_g.step()
-    scheduler_d.step()
 
     return loss_d.item()
 
@@ -95,8 +94,6 @@ def train_generator(generator, discriminator):
     optimizer_d.step()
     optimizer_g.step()
 
-    scheduler_g.step()
-
     return loss_g.item()
 
 def train(generator, discriminator, epochs):
@@ -113,6 +110,8 @@ def train(generator, discriminator, epochs):
         loss_d_list.append(total_loss_d)
         loss_g_list.append(total_loss_g)
         print("epoch %3d : loss_g = %4f   loss_d = %4f" % (epoch, total_loss_g, total_loss_d))
+        scheduler_g.step()
+        scheduler_d.step()
     return loss_d_list, loss_g_list
 
 # ----------------------------------------------------------------------------------------------
