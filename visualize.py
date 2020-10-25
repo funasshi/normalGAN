@@ -11,8 +11,10 @@ generator.eval()
 
 
 fig=plt.figure()
-for i in range(1,21):
-    ax=fig.add_subplot(4,5,i)
+tate=5
+yoko=6
+for i in range(1,tate*yoko+1):
+    ax=fig.add_subplot(tate,yoko,i)
     fake=generator(torch.rand((1,100)))
     fake=fake.reshape(28,28)
     fake=fake.detach().numpy()

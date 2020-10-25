@@ -140,6 +140,7 @@ import numpy as np
 x = np.arange(epochs)
 plt.plot(x, loss_d_list, "r", label="d_loss")
 plt.plot(x, loss_g_list, "g", label="g_loss")
+plt.legend()
 plt.savefig("loss.png")
 # ----------------------------------------------------------------------------------------------
 # generator保存
