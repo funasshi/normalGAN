@@ -60,5 +60,12 @@ class Discriminator(nn.Module):
         return prob
 
 # import torchsummary
-# generator=Discriminator()
+def init_weights(m):
+    if type(m) == nn.Linear:
+        nn.init.normal_(m.weight,0,0.01)
+
+generator=Generator()
+generator.apply(init_weights)
+
+
 # torchsummary.summary(generator, (28*28,))

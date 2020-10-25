@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 # データセットの定義 (訓練データの正規化、ラベルのone-hot-vec化)
 
 transform = transforms.Compose([transforms.ToTensor(),
-                                lambda x: x.reshape((28*28)),
+                                lambda x: x.reshape((28 * 28)),
                                 lambda x: (x - 0.5) * 2])
 
 target_transform = lambda x: torch.eye(10)[x]
@@ -23,6 +23,17 @@ trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuff
 # モデル定義
 generator = Generator()
 discriminator = Discriminator()
+
+# 重みの初期化
+def init_weights(m):
+    if type(m) == nn.Linear:
+        nn.init.normal_(m.weight,0,0.01)
+
+generator.apply(init_weights)
+discriminator.apply(init_weights)
+
+
+
 if torch.cuda.is_available():
     discriminator = discriminator.cuda()
     # discriminator = nn.DataParallel(discriminator)
@@ -34,28 +45,30 @@ if torch.cuda.is_available():
 loss_cross = nn.BCELoss()
 
 # 最適化アルゴリズム定義
-optimizer_d = optim.Adam(discriminator.parameters(), lr=0.0001,betas=(0.5, 0.999))
-optimizer_g = optim.Adam(generator.parameters(), lr=0.0002,betas=(0.5, 0.999))
-epochs=int(input("epochs:"))
+optimizer_d = optim.Adam(discriminator.parameters(), lr=0.0001, betas=(0.5, 0.999))
+optimizer_g = optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
+epochs = int(input("epochs:"))
 
 
 def schedule_func(epoch):
-    middle=epochs//2
-    if epoch<middle:
+    middle = epochs // 2
+    if epoch < middle:
         return 1
-    return (epochs-epoch)/middle
+    return (epochs - epoch) / middle
 
-scheduler_d = optim.lr_scheduler.LambdaLR(optimizer_d, lr_lambda = schedule_func)
-scheduler_g = optim.lr_scheduler.LambdaLR(optimizer_g, lr_lambda = schedule_func)
+
+scheduler_d = optim.lr_scheduler.LambdaLR(optimizer_d, lr_lambda=schedule_func)
+scheduler_g = optim.lr_scheduler.LambdaLR(optimizer_g, lr_lambda=schedule_func)
+
 
 # ----------------------------------------------------------------------------------------------
 
 # 訓練アルゴリズム
 def train_discriminator(generator, discriminator, data):
-    z=torch.rand((batch_size, 100))
+    z = torch.rand((batch_size, 100))
     if torch.cuda.is_available():
-        z=z.cuda()
-        data=data.cuda()
+        z = z.cuda()
+        data = data.cuda()
     fake = generator(z)
     prob_fake = discriminator(fake)
     prob_data = discriminator(data)
@@ -77,7 +90,7 @@ def train_discriminator(generator, discriminator, data):
 
 
 def train_generator(generator, discriminator):
-    z=torch.rand((batch_size, 100))
+    z = torch.rand((batch_size, 100))
     if torch.cuda.is_available():
         z = z.cuda()
     fake = generator(z)
@@ -95,6 +108,7 @@ def train_generator(generator, discriminator):
     optimizer_g.step()
 
     return loss_g.item()
+
 
 def train(generator, discriminator, epochs):
     loss_d_list = []
@@ -114,16 +128,18 @@ def train(generator, discriminator, epochs):
         scheduler_d.step()
     return loss_d_list, loss_g_list
 
+
 # ----------------------------------------------------------------------------------------------
 # 実際の処理
-loss_d_list,loss_g_list=train(generator, discriminator, epochs)
+loss_d_list, loss_g_list = train(generator, discriminator, epochs)
 
 # ----------------------------------------------------------------------------------------------
 # 可視化
 import numpy as np
-x=np.arange(epochs)
-plt.plot(x,loss_d_list,"r",label="d_loss")
-plt.plot(x,loss_g_list,"g",label="g_loss")
+
+x = np.arange(epochs)
+plt.plot(x, loss_d_list, "r", label="d_loss")
+plt.plot(x, loss_g_list, "g", label="g_loss")
 plt.savefig("loss.png")
 # ----------------------------------------------------------------------------------------------
 # generator保存
