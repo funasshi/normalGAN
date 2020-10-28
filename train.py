@@ -48,7 +48,7 @@ if torch.cuda.is_available():
 loss_cross = nn.BCELoss()
 
 # 最適化アルゴリズム定義
-optimizer_d = optim.Adam(discriminator.parameters(), lr=0.0001, betas=(0.5, 0.999))
+optimizer_d = optim.Adam(discriminator.parameters(), lr=0.0003, betas=(0.5, 0.999))
 optimizer_g = optim.Adam(generator.parameters(), lr=0.0002, betas=(0.5, 0.999))
 epochs = int(input("epochs:"))
 
