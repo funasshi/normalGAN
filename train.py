@@ -32,14 +32,17 @@ discriminator = Discriminator()
 # generator.apply(init_weights)
 # discriminator.apply(init_weights)
 
+#デバイス
+device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+discriminator.to(device)
+generator.to(device)
 
-
-if torch.cuda.is_available():
-    discriminator = discriminator.cuda()
-    # discriminator = nn.DataParallel(discriminator)
-    generator = generator.cuda()
-    # generator = nn.DataParallel(generator)
-    torch.backends.cudnn.benchmark = True
+# if torch.cuda.is_available():
+#     discriminator = discriminator.cuda()
+#     # discriminator = nn.DataParallel(discriminator)
+#     generator = generator.cuda()
+#     # generator = nn.DataParallel(generator)
+#     torch.backends.cudnn.benchmark = True
 
 # ロス定義
 loss_cross = nn.BCELoss()
@@ -66,9 +69,11 @@ scheduler_g = optim.lr_scheduler.LambdaLR(optimizer_g, lr_lambda=schedule_func)
 # 訓練アルゴリズム
 def train_discriminator(generator, discriminator, data):
     z = torch.rand((batch_size, 100))
-    if torch.cuda.is_available():
-        z = z.cuda()
-        data = data.cuda()
+    # if torch.cuda.is_available():
+    #     z = z.cuda()
+    #     data = data.cuda()
+    z.to(device)
+    data.to(device)
     fake = generator(z)
     prob_fake = discriminator(fake)
     prob_data = discriminator(data)
@@ -91,8 +96,9 @@ def train_discriminator(generator, discriminator, data):
 
 def train_generator(generator, discriminator):
     z = torch.rand((batch_size, 100))
-    if torch.cuda.is_available():
-        z = z.cuda()
+    # if torch.cuda.is_available():
+    #     z = z.cuda()
+    z.to(device)
     fake = generator(z)
     prob_fake = discriminator(fake)
 
