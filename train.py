@@ -81,13 +81,8 @@ def train_discriminator(generator, discriminator, data):
     loss_d = (loss_A + loss_B) / 2
 
     optimizer_d.zero_grad()
-    optimizer_g.zero_grad()
-
     loss_d.backward()
-
-    optimizer_g.zero_grad()
     optimizer_d.step()
-    optimizer_g.step()
 
     return loss_d.item()
 
@@ -101,13 +96,8 @@ def train_generator(generator, discriminator):
 
     loss_g = loss_cross(prob_fake, torch.ones_like(prob_fake))
 
-    optimizer_d.zero_grad()
     optimizer_g.zero_grad()
-
     loss_g.backward()
-
-    optimizer_d.zero_grad()
-    optimizer_d.step()
     optimizer_g.step()
 
     return loss_g.item()
