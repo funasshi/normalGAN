@@ -12,19 +12,19 @@ class Generator(nn.Module):
 
         self.layer2 = nn.Sequential(
             nn.Linear(128, 256),
-            nn.BatchNorm1d(256,),
+            nn.BatchNorm1d(1),
             nn.LeakyReLU(0.2)
         )
 
         self.layer3 = nn.Sequential(
             nn.Linear(256, 512),
-            nn.BatchNorm1d(512),
+            nn.BatchNorm1d(1),
             nn.LeakyReLU(0.2)
         )
 
         self.layer4 = nn.Sequential(
             nn.Linear(512, 1024),
-            nn.BatchNorm1d(1024),
+            nn.BatchNorm1d(1),
             nn.LeakyReLU(0.2)
         )
 
@@ -40,7 +40,7 @@ class Generator(nn.Module):
         out = self.layer3(out)
         out = self.layer4(out)
         out = self.layer5(out)
-        return out
+        return out.reshape(-1,28*28)
 
 class Discriminator(nn.Module):
     def __init__(self):

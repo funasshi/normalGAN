@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 # データセットの定義 (訓練データの正規化、ラベルのone-hot-vec化)
 
 transform = transforms.Compose([transforms.ToTensor(),
-                                lambda x: x.reshape((28 * 28)),
+                                lambda x: x.reshape((1, 28 * 28)),
                                 lambda x: (x - 0.5) * 2])
 
 target_transform = lambda x: torch.eye(10)[x]
@@ -68,7 +68,7 @@ scheduler_g = optim.lr_scheduler.LambdaLR(optimizer_g, lr_lambda=schedule_func)
 
 # 訓練アルゴリズム
 def train_discriminator(generator, discriminator, data):
-    z = torch.rand((batch_size, 100))*2-1
+    z = torch.rand((batch_size,1, 100))*2-1
     if torch.cuda.is_available():
         z = z.cuda()
         data = data.cuda()
@@ -88,7 +88,7 @@ def train_discriminator(generator, discriminator, data):
 
 
 def train_generator(generator, discriminator):
-    z = torch.rand((batch_size, 100))*2-1
+    z = torch.rand((batch_size,1, 100))*2-1
     if torch.cuda.is_available():
         z = z.cuda()
     fake = generator(z)
