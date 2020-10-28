@@ -68,7 +68,7 @@ scheduler_g = optim.lr_scheduler.LambdaLR(optimizer_g, lr_lambda=schedule_func)
 
 # 訓練アルゴリズム
 def train_discriminator(generator, discriminator, data):
-    z = torch.rand((batch_size, 100))
+    z = torch.rand((batch_size, 100))*2-1
     if torch.cuda.is_available():
         z = z.cuda()
         data = data.cuda()
@@ -93,7 +93,7 @@ def train_discriminator(generator, discriminator, data):
 
 
 def train_generator(generator, discriminator):
-    z = torch.rand((batch_size, 100))
+    z = torch.rand((batch_size, 100))*2-1
     if torch.cuda.is_available():
         z = z.cuda()
     fake = generator(z)
